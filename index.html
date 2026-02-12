@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Video Player Configuration</title>
+    <script src="script.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .config-panel {
+            flex: 1;
+            min-width: 400px;
+        }
+        .preview-panel {
+            flex: 1;
+            min-width: 400px;
+        }
+        .config-form {
+            padding: 25px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .preview-container {
+            padding: 25px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        .checkbox-item label {
+            margin: 0;
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .video-container {
+            width: 100%;
+            height: 350px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #000;
+        }
+        .update-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .update-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 20px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .section-title {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .custom-position {
+            margin-top: 8px;
+            display: flex;
+            gap: 5px;
+        }
+        .custom-position input {
+            font-size: 12px;
+            padding: 4px 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Smart Video Player Configuration</h1>
+    
+    <div class="container">
+        <!-- Configuration Panel -->
+        <div class="config-panel">
+            <div class="config-form">
+                <h2>Configuration</h2>
+                
+                <div class="form-group">
+                    <label for="src">Video Source:</label>
+                    <input type="text" id="src" value="test.mp4" placeholder="Enter video file path or URL">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fit">Fit Mode:</label>
+                        <select id="fit">
+                            <option value="fit" selected>Fit (Contain)</option>
+                            <option value="crop">Crop (Cover)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="autoplay-option">Autoplay:</label>
+                        <select id="autoplay-option">
+                            <option value="none">None</option>
+                            <option value="load">On Load</option>
+                            <option value="viewport" selected>On Viewport</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="play-btn-align">Play Button Position:</label>
+                        <select id="play-btn-align">
+                            <option value="Top Left">Top Left</option>
+                            <option value="Top Center">Top Center</option>
+                            <option value="Top Right" selected>Top Right</option>
+                            <option value="Middle Left">Middle Left</option>
+                            <option value="Center">Center</option>
+                            <option value="Middle Right">Middle Right</option>
+                            <option value="Bottom Left">Bottom Left</option>
+                            <option value="Bottom Center">Bottom Center</option>
+                            <option value="Bottom Right">Bottom Right</option>
+                            <option value="Custom">Custom</option>
+                        </select>
+                        <div id="play-btn-custom" class="custom-position" style="display: none;">
+                            <input type="number" id="play-btn-x" placeholder="X (px)" min="0" style="width: 70px; margin-right: 5px;">
+                            <input type="number" id="play-btn-y" placeholder="Y (px)" min="0" style="width: 70px;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mute-btn-align">Mute Button Position:</label>
+                        <select id="mute-btn-align">
+                            <option value="Top Left">Top Left</option>
+                            <option value="Top Center">Top Center</option>
+                            <option value="Top Right">Top Right</option>
+                            <option value="Middle Left">Middle Left</option>
+                            <option value="Center">Center</option>
+                            <option value="Middle Right">Middle Right</option>
+                            <option value="Bottom Left">Bottom Left</option>
+                            <option value="Bottom Center">Bottom Center</option>
+                            <option value="Bottom Right" selected>Bottom Right</option>
+                            <option value="Custom">Custom</option>
+                        </select>
+                        <div id="mute-btn-custom" class="custom-position" style="display: none;">
+                            <input type="number" id="mute-btn-x" placeholder="X (px)" min="0" style="width: 70px; margin-right: 5px;">
+                            <input type="number" id="mute-btn-y" placeholder="Y (px)" min="0" style="width: 70px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="background">Controls Color:</label>
+                        <input type="color" id="background" value="#ff0000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="background-color">Video Background Color:</label>
+                        <input type="color" id="background-color" value="#000000">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exit-url">Exit URL:</label>
+                        <input type="url" id="exit-url" value="https://example.com" placeholder="https://example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="progress-bar-position">Progress Bar Position:</label>
+                        <select id="progress-bar-position">
+                            <option value="bottom" selected>Bottom</option>
+                            <option value="top">Top</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="countdown-position">Countdown Timer Position:</label>
+                        <select id="countdown-position">
+                            <option value="Top Left" selected>Top Left</option>
+                            <option value="Top Center">Top Center</option>
+                            <option value="Top Right">Top Right</option>
+                            <option value="Middle Left">Middle Left</option>
+                            <option value="Center">Center</option>
+                            <option value="Middle Right">Middle Right</option>
+                            <option value="Bottom Left">Bottom Left</option>
+                            <option value="Bottom Center">Bottom Center</option>
+                            <option value="Bottom Right">Bottom Right</option>
+                            <option value="Custom">Custom</option>
+                        </select>
+                        <div id="countdown-custom" class="custom-position" style="display: none;">
+                            <input type="number" id="countdown-x" placeholder="X (px)" min="0" style="width: 70px; margin-right: 5px;">
+                            <input type="number" id="countdown-y" placeholder="Y (px)" min="0" style="width: 70px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="control-size">Control Size:</label>
+                        <select id="control-size">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="section-title">Player Options:</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="auto-pause-when-out-of-view" checked>
+                            <label for="auto-pause-when-out-of-view">Auto Pause Out of View</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="muted" checked>
+                            <label for="muted">Muted</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="preload" checked>
+                            <label for="preload">Preload</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="loop" checked>
+                            <label for="loop">Loop</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="tracking" checked>
+                            <label for="tracking">Tracking Events</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="show-countdown" checked>
+                            <label for="show-countdown">Show Countdown</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="section-title">Control Options:</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="enable-controls" checked>
+                            <label for="enable-controls">Show Controls</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="show-play-pause" checked>
+                            <label for="show-play-pause">Show Play/Pause Button</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="show-mute-unmute" checked>
+                            <label for="show-mute-unmute">Show Mute/Unmute Button</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="show-progress-bar" checked>
+                            <label for="show-progress-bar">Show Progress Bar</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="show-replay" checked>
+                            <label for="show-replay">Show Replay Button</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="update-btn" onclick="updateVideoPlayer()">Update Video Player</button>
+            </div>
+        </div>
+        
+        <!-- Preview Panel -->
+        <div class="preview-panel">
+            <div class="preview-container">
+                <h2>Live Preview</h2>
+                <div class="video-container" id="video-container">
+                    <smart-video-player
+                        src="optimized.mp4"
+                        fit="fit"
+                        autoplay-option="viewport"
+                        auto-pause-when-out-of-view
+                        muted
+                        preload
+                        loop
+                        tracking
+                        enable-controls
+                        show-play-pause
+                        show-mute-unmute
+                        show-progress-bar
+                        progress-bar-position="bottom"
+                        show-replay
+                        play-btn-align="Top Right"
+                        mute-btn-align="Bottom Right"
+                        countdown-align="Top Left"
+                        control-size="medium"
+                        background="#ff0000"
+                        background-color="#000000"
+                        show-countdown
+                        exit-url="https://example.com"
+                    ></smart-video-player>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateVideoPlayer() {
+            const container = document.getElementById('video-container');
+            
+            // Get all form values
+            const src = document.getElementById('src').value;
+            const fit = document.getElementById('fit').value;
+            const autoplayOption = document.getElementById('autoplay-option').value;
+            const playBtnAlign = document.getElementById('play-btn-align').value;
+            const muteBtnAlign = document.getElementById('mute-btn-align').value;
+            const background = document.getElementById('background').value;
+            const backgroundColor = document.getElementById('background-color').value;
+            const progressBarPosition = document.getElementById('progress-bar-position').value;
+            const countdownPosition = document.getElementById('countdown-position').value;
+            const controlSize = document.getElementById('control-size').value;
+            const exitUrl = document.getElementById('exit-url').value;
+            
+            // Get custom position values
+            const getCustomPosition = (type, align) => {
+                if (align === 'Custom') {
+                    const x = document.getElementById(`${type}-x`).value;
+                    const y = document.getElementById(`${type}-y`).value;
+                    if (x && y) {
+                        return `{"left": "${x}px", "top": "${y}px"}`;
+                    }
+                }
+                return '';
+            };
+            
+            const playBtnPos = getCustomPosition('play-btn', playBtnAlign);
+            const muteBtnPos = getCustomPosition('mute-btn', muteBtnAlign);
+            const countdownPos = getCustomPosition('countdown', countdownPosition);
+            
+            // Get checkbox values
+            const autoPauseWhenOutOfView = document.getElementById('auto-pause-when-out-of-view').checked;
+            const muted = document.getElementById('muted').checked;
+            const preload = document.getElementById('preload').checked;
+            const loop = document.getElementById('loop').checked;
+            const tracking = document.getElementById('tracking').checked;
+            const enableControls = document.getElementById('enable-controls').checked;
+            const showPlayPause = document.getElementById('show-play-pause').checked;
+            const showMuteUnmute = document.getElementById('show-mute-unmute').checked;
+            const showProgressBar = document.getElementById('show-progress-bar').checked;
+            const showReplay = document.getElementById('show-replay').checked;
+            const showCountdown = document.getElementById('show-countdown').checked;
+            
+            // Create new video player element
+            const videoPlayer = document.createElement('smart-video-player');
+            
+            // Set attributes
+            videoPlayer.setAttribute('src', src);
+            videoPlayer.setAttribute('fit', fit);
+            videoPlayer.setAttribute('autoplay-option', autoplayOption);
+            videoPlayer.setAttribute('play-btn-align', playBtnAlign);
+            videoPlayer.setAttribute('mute-btn-align', muteBtnAlign);
+            videoPlayer.setAttribute('background', background);
+            videoPlayer.setAttribute('background-color', backgroundColor);
+            videoPlayer.setAttribute('progress-bar-position', progressBarPosition);
+            videoPlayer.setAttribute('countdown-align', countdownPosition);
+            videoPlayer.setAttribute('control-size', controlSize);
+            
+            // Set custom position attributes if Custom is selected
+            if (playBtnAlign === 'Custom' && playBtnPos) {
+                videoPlayer.setAttribute('play-btn-pos', playBtnPos);
+            }
+            if (muteBtnAlign === 'Custom' && muteBtnPos) {
+                videoPlayer.setAttribute('mute-btn-pos', muteBtnPos);
+            }
+            if (countdownPosition === 'Custom' && countdownPos) {
+                videoPlayer.setAttribute('countdown-pos', countdownPos);
+            }
+            
+            if (exitUrl) {
+                videoPlayer.setAttribute('exit-url', exitUrl);
+            }
+            
+            // Set boolean attributes
+            if (autoPauseWhenOutOfView) videoPlayer.setAttribute('auto-pause-when-out-of-view', '');
+            if (muted) videoPlayer.setAttribute('muted', '');
+            if (preload) videoPlayer.setAttribute('preload', '');
+            if (loop) videoPlayer.setAttribute('loop', '');
+            if (tracking) videoPlayer.setAttribute('tracking', '');
+            if (enableControls) videoPlayer.setAttribute('enable-controls', '');
+            if (showPlayPause) videoPlayer.setAttribute('show-play-pause', '');
+            if (showMuteUnmute) videoPlayer.setAttribute('show-mute-unmute', '');
+            if (showProgressBar) videoPlayer.setAttribute('show-progress-bar', '');
+            if (showReplay) videoPlayer.setAttribute('show-replay', '');
+            if (showCountdown) videoPlayer.setAttribute('show-countdown', '');
+            
+            // Replace existing video player
+            container.innerHTML = '';
+            container.appendChild(videoPlayer);
+            
+            console.log('Video player updated with new configuration');
+        }
+
+        // Add event listener for tracking events
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add real-time update listeners for all form inputs
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('input', updateVideoPlayer);
+                input.addEventListener('change', updateVideoPlayer);
+            });
+            
+            // Handle custom position dropdown changes
+            function toggleCustomPosition(selectId, customDivId) {
+                const select = document.getElementById(selectId);
+                const customDiv = document.getElementById(customDivId);
+                
+                select.addEventListener('change', function() {
+                    if (this.value === 'Custom') {
+                        customDiv.style.display = 'flex';
+                    } else {
+                        customDiv.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Setup custom position toggles
+            toggleCustomPosition('play-btn-align', 'play-btn-custom');
+            toggleCustomPosition('mute-btn-align', 'mute-btn-custom');
+            toggleCustomPosition('countdown-position', 'countdown-custom');
+            
+            document.addEventListener('videoTracking', function(event) {
+                console.log('Video Event:', event.detail);
+            });
+        });
+    </script>
+</body>
+</html>
